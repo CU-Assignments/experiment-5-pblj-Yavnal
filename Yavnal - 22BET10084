@@ -1,0 +1,130 @@
+import java.util.List;
+import java.util.ArrayList;
+
+public class SumOfIntegers {
+
+    // Method to calculate the sum of integers using autoboxing and unboxing
+    public static int calculateSum(List<Integer> numbers) {
+        int sum = 0;
+        for (Integer num : numbers) {
+            sum += num; // Unboxing happens here automatically
+        }
+        return sum;
+    }
+
+    // Method to parse strings into Integer wrapper class
+    public static Integer parseInteger(String str) {
+        try {
+            return Integer.parseInt(str); // Parses the string to an Integer
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format: " + str);
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Sample list of strings to parse into integers
+        List<String> stringNumbers = new ArrayList<>();
+        stringNumbers.add("10");
+        stringNumbers.add("20");
+        stringNumbers.add("30");
+        stringNumbers.add("40");
+
+        // Convert string list to Integer list using parsing
+        List<Integer> integerNumbers = new ArrayList<>();
+        for (String str : stringNumbers) {
+            Integer num = parseInteger(str);
+            if (num != null) {
+                integerNumbers.add(num); // Autoboxing happens here automatically
+            }
+        }
+
+        // Calculate the sum of integers in the list
+        int sum = calculateSum(integerNumbers);
+        System.out.println("The sum of the integers is: " + sum);
+    }
+}
+Problem - 2
+import java.io.*;
+
+// Class representing a Student
+class Student implements Serializable {
+    private int id;
+    private String name;
+    private double gpa;
+
+    // Constructor
+    public Student(int id, String name, double gpa) {
+        this.id = id;
+        this.name = name;
+        this.gpa = gpa;
+    }
+
+    // Getter methods
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getGpa() {
+        return gpa;
+    }
+
+    // Method to display student details
+    public void displayDetails() {
+        System.out.println("Student ID: " + id);
+        System.out.println("Student Name: " + name);
+        System.out.println("Student GPA: " + gpa);
+    }
+}
+
+public class StudentSerialization {
+
+    // Method to serialize the Student object to a file
+    public static void serializeStudent(Student student, String filename) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+            out.writeObject(student);
+            System.out.println("Student object serialized successfully.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found.");
+        } catch (IOException e) {
+            System.out.println("Error during serialization: " + e.getMessage());
+        }
+    }
+
+    // Method to deserialize the Student object from a file
+    public static Student deserializeStudent(String filename) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
+            Student student = (Student) in.readObject();
+            return student;
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found.");
+        } catch (IOException e) {
+            System.out.println("Error during deserialization: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error: Class not found.");
+        }
+        return null; // Return null in case of any error
+    }
+
+    public static void main(String[] args) {
+        // Create a new Student object
+        Student student = new Student(1, "John Doe", 3.75);
+
+        // Serialize the student object to a file
+        String filename = "student.ser";
+        serializeStudent(student, filename);
+
+        // Deserialize the student object from the file
+        Student deserializedStudent = deserializeStudent(filename);
+
+        // Display student details if deserialization was successful
+        if (deserializedStudent != null) {
+            System.out.println("\nDeserialized Student Details:");
+            deserializedStudent.displayDetails();
+        }
+    }
+}
